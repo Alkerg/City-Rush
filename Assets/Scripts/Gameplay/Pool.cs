@@ -28,7 +28,7 @@ public class Pool : MonoBehaviour
 
     public GameObject GetObject()
     {
-        int n;
+        int n = 0;
         do
         {
             n = Random.Range(0, objects.Count);

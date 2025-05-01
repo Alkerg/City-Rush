@@ -43,6 +43,6 @@ public class PauseManager : MonoBehaviour
 
     public void ExitLevel()
     {
-        ScenesManager.LoadScene(0);
+        ScenesManager.LoadScene(1);
     }
 }

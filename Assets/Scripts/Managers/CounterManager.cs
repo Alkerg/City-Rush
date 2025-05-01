@@ -9,7 +9,8 @@ public class CounterManager : MonoBehaviour
     public Animator playerAnimator;
     public TextMeshProUGUI distanceTMP;
     public float distance;
-    public ObstacleManager obstacleManager;
+    public ObjectsGenerationManager obstacleManager;
+    public ObjectsGenerationManager coinManager;
     public float distanceBreach = 10f;
     public AudioSource audioSource;
     void Start()
@@ -36,7 +37,8 @@ public class CounterManager : MonoBehaviour
         SetPlayerAnimator();
         LevelManager.isGameRunning = true;
         playerAnimator.SetBool("Running",true);
-        obstacleManager.StartObstacles();
+        obstacleManager.StartGeneration();
+        coinManager.StartGeneration();
         audioSource.Play();
     }
 

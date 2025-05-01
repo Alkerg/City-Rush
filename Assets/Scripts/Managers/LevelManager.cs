@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     public GameObject gameOverPanel;
     public DBManager DBManager;
     public CounterManager counterManager;
+    public CoinsManager coinsManager;
 
     void Awake()
     {
@@ -23,6 +24,8 @@ public class LevelManager : MonoBehaviour
         {
             GameOver();
             isGameOver = false;
+            VerifyAndUpdateScore();
+            UpdateCoins();
         }
     }
 
@@ -34,23 +37,38 @@ public class LevelManager : MonoBehaviour
     public void GameOver()
     {
         Time.timeScale = 0;
-        float currentScore = PlayerPrefs.GetFloat("score");
-        float newScore = counterManager.distance;
         gameOverPanel.SetActive(true);
-        VerifyAndUpdateScore(currentScore, newScore);
         counterManager.audioSource.Stop();
     }
 
-    private void VerifyAndUpdateScore(float currentScore, float newScore)
+    private async void VerifyAndUpdateScore()
     {
-       /* Debug.Log("currentScore:" + currentScore);
-        Debug.Log("newScore:" + newScore);
+        float currentScore = await DBManager.Instance.GetBestScore();
+        float newScore = counterManager.distance;
+
+        Debug.Log("Current score:" + currentScore);
+        Debug.Log("New score:" + newScore);
+
         if (newScore > currentScore)
         {
-            DBManager.UpdateScore(newScore);
-            PlayerPrefs.SetFloat("score", newScore);
-            Debug.Log("Score updated");
-        }*/
+            DBManager.Instance.UpdateBestScore(newScore);
+            Debug.Log($"Score updated: {newScore}");
+        }
     }
 
+    private async void UpdateCoins()
+    {
+        int coinsObtained = coinsManager.coins;
+        int currentCoins = await DBManager.Instance.GetCoins();
+        int newCoins = coinsObtained + currentCoins;
+        DBManager.Instance.UpdateCoins(newCoins);
+        Debug.Log($"Coins updated: {newCoins}");
+    }
+
+    public async void SignOutPlayer()
+    {
+        DBManager.Instance.DeleteSession();
+        await DBManager.Instance.SignOut();
+        ScenesManager.LoadScene(0);
+    }
 }
