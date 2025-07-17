@@ -20,8 +20,8 @@ public class DBManager : MonoBehaviour
 {
     public static DBManager Instance { get; private set; }
     public Supabase.Client supabase { get; private set; }
-    private readonly string SUPABASE_URL = "https://zyqjrhonpfimdbustcan.supabase.co";
-    private readonly string SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5cWpyaG9ucGZpbWRidXN0Y2FuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3NTQyMjksImV4cCI6MjA2MDMzMDIyOX0.-IA-_LD6AH5HHG6D-QxXP8ZMDopmh2srC0qARNaTRnw";
+    private readonly string SUPABASE_URL = "";
+    private readonly string SUPABASE_KEY = "";
     //public ErrorPanel errorPanel;
     //private Dictionary<string, bool> data = new Dictionary<string, bool>();
     private void Awake()
