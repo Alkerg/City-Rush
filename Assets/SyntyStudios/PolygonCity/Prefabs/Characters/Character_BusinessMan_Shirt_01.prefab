@@ -1868,8 +1868,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   checkGround: {fileID: 1335435282433900306}
-  jumpBufferTime: 0.3
   jumpBufferCounter: 0
+  touchControl: {fileID: 0}
+  coinsManager: {fileID: 0}
+  getCoinsTrigger: {fileID: 0}
 --- !u!82 &4539029118023867865
 AudioSource:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectsGenerationManager : MonoBehaviour
 {
-    public Pool obstaclePool;
+    public Pool pool;
     public float timeBetweenObstacles = 1f;
     private Dictionary<int, int[]> possiblePositions = new Dictionary<int, int[]>
     {
@@ -16,6 +16,14 @@ public class ObjectsGenerationManager : MonoBehaviour
         {6, new int[] {1, 1, 1} },
         {7, new int[] {1, 0, 1} },
     };
+    private Dictionary<int, int[]> possiblePositionsOnlyOneSlot = new Dictionary<int, int[]>()
+    {
+        {1, new int[] {1, 0, 0} },
+        {2, new int[] {0, 1, 0} },
+        {3, new int[] {0, 0, 1} },
+        {4, new int[] {0, 0, 0} },
+    };
+
 
     public void PlaceInRail(int position, GameObject obstacle)
     {
@@ -42,6 +50,11 @@ public class ObjectsGenerationManager : MonoBehaviour
         InvokeRepeating(nameof(GenerateObstacles),0, timeBetweenObstacles);
     }
 
+    public void StartGenerationForOneObject()
+    {
+        InvokeRepeating(nameof(GenerateOnlyOneObstacle), 0, timeBetweenObstacles);
+    }
+
     public void GenerateObstacles()
     {
         int[] railsPosition = possiblePositions[Random.Range(1, 8)];
@@ -50,10 +63,30 @@ public class ObjectsGenerationManager : MonoBehaviour
         {
             if (railsPosition[i] != 0)
             {
-                GameObject obstacle = obstaclePool.GetObject();
+                GameObject obstacle = pool.GetObject();
                 PlaceInRail(i,obstacle);
             }
             
+        }
+    }
+
+    public void GenerateOnlyOneObstacle()
+    {
+        int position = Random.Range(1, 5);
+
+        if (position == 4) return;
+        
+
+        int[] railsPosition = possiblePositionsOnlyOneSlot[position];
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (railsPosition[i] != 0)
+            {
+                GameObject obstacle = pool.GetObject();
+                PlaceInRail(i, obstacle);
+            }
+
         }
     }
 

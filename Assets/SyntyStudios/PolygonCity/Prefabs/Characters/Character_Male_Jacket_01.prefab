@@ -2409,8 +2409,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   checkGround: {fileID: 8500090484430700955}
-  jumpBufferTime: 0.3
   jumpBufferCounter: 0
+  touchControl: {fileID: 0}
+  coinsManager: {fileID: 0}
+  getCoinsTrigger: {fileID: 0}
 --- !u!1 &187746
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,16 +8,13 @@ using System.Threading.Tasks;
 using Postgrest.Models;
 using Postgrest.Attributes;
 using System;
-using TMPro;
-using Supabase.Storage;
 using System.Text.Json;
-using UnityEditor.PackageManager;
 using System.Net.Http;
 using static System.Net.WebRequestMethods;
 using System.Net.Sockets;
 using Supabase.Gotrue.Exceptions;
-using Supabase.Interfaces;
 using static Postgrest.Constants;
+using static DBManager;
 
 public class DBManager : MonoBehaviour
 {
@@ -26,7 +23,7 @@ public class DBManager : MonoBehaviour
     private readonly string SUPABASE_URL = "https://zyqjrhonpfimdbustcan.supabase.co";
     private readonly string SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5cWpyaG9ucGZpbWRidXN0Y2FuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3NTQyMjksImV4cCI6MjA2MDMzMDIyOX0.-IA-_LD6AH5HHG6D-QxXP8ZMDopmh2srC0qARNaTRnw";
     //public ErrorPanel errorPanel;
-
+    //private Dictionary<string, bool> data = new Dictionary<string, bool>();
     private void Awake()
     {
         if (Instance == null)
@@ -76,6 +73,22 @@ public class DBManager : MonoBehaviour
             return false;
         }
 
+    }
+
+    public async Task<bool> SignInWithDiscord()
+    {
+        try
+        {
+            var signInUrl = await Instance.supabase.Auth.SignIn(Constants.Provider.Discord);
+            Debug.Log(signInUrl.Uri);
+
+            return true;
+        }
+        catch (Exception error)
+        {
+            HandleExceptions(error);
+            return false;
+        }
     }
 
     public async Task<bool> SignUp(string username, string email, string password)
@@ -180,6 +193,61 @@ public class DBManager : MonoBehaviour
             .Update();
     }
 
+    public async void UpdateUnlockedCharacters(Dictionary<string, bool> newUnlockedCharacters)
+    {
+        Guid userId = Guid.Parse(Instance.supabase.Auth.CurrentUser.Id);
+        var update = await Instance.supabase
+            .From<PlayerModel>()
+            .Where(playerModel => playerModel.UserId == userId)
+            .Set(playerModel => playerModel.Unlocked_characters, newUnlockedCharacters)
+            .Update();
+    }
+
+    public async Task<Dictionary<String,bool>> GetUnlockedCharacters()
+    {
+        var userId = supabase.Auth.CurrentUser.Id;
+        try
+        {
+            var result = await supabase
+                .From<PlayerModel>()
+                .Filter("user_id", Postgrest.Constants.Operator.Equals, userId)
+                .Get();
+            return result.Model.Unlocked_characters;
+        }
+        catch (Exception error)
+        {
+            Debug.Log(error.Message);
+            return null;
+        }
+    }
+
+    public async Task<List<CharactersModel>> GetAllCharacters()
+    {
+        try
+        {
+            var response = await Instance.supabase
+                .From<CharactersModel>()
+                .Get();
+
+            if (response != null && response.Models.Count > 0)
+            {
+                Debug.Log($"{response.Models.Count} characters retrieved.");
+                Debug.Log(response.Models.ToString());
+                return response.Models;
+            }
+            else
+            {
+                Debug.LogWarning("No characters in table");
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+            return null;
+        }
+    }
+
     // Auxiliar methods
     public async Task<float> GetBestScore()
     {
@@ -235,6 +303,8 @@ public class DBManager : MonoBehaviour
             return "";
         }
     }
+
+    // Session methods
 
     public async void TryRestoreSession()
     {
@@ -354,6 +424,19 @@ public class DBManager : MonoBehaviour
 
         [Column("user_id")]
         public Guid UserId { get; set; }
+
+        [Column("unlocked_characters")]
+        public Dictionary<String,bool> Unlocked_characters { get; set; }
+    }
+
+    [Table("characters")]
+    public class CharactersModel : BaseModel
+    {
+        [PrimaryKey("id", false)]
+        public int Id { get; set; }
+
+        [Column("price")]
+        public int Price { get; set; }
     }
 
     // Custom exception classes

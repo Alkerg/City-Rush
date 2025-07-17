@@ -11,6 +11,7 @@ public class CounterManager : MonoBehaviour
     public float distance;
     public ObjectsGenerationManager obstacleManager;
     public ObjectsGenerationManager coinManager;
+    public ObjectsGenerationManager powerUpManager;
     public float distanceBreach = 10f;
     public AudioSource audioSource;
     void Start()
@@ -39,6 +40,7 @@ public class CounterManager : MonoBehaviour
         playerAnimator.SetBool("Running",true);
         obstacleManager.StartGeneration();
         coinManager.StartGeneration();
+        powerUpManager.StartGenerationForOneObject();
         audioSource.Play();
     }
 

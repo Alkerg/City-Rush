@@ -35,6 +35,21 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public async void SignOutPlayer()
+    {
+        var success = await DBManager.Instance.SignOut();
+    }
+
+    public async void GetUnlockedCharacters()
+    {
+        var json = await DBManager.Instance.GetUnlockedCharacters();
+    }
+
+    public async void GetAllCharacters()
+    {
+        var list = await DBManager.Instance.GetAllCharacters();
+    }
+
     public void SignInAnonymously()
     {
         ScenesManager.LoadScene(1);
@@ -43,6 +58,11 @@ public class MainMenuManager : MonoBehaviour
     public void PromoteUserPlayer()
     {
         DBManager.Instance.PromoteAnonymousUser(emailTMP.text, passwordTMP.text, usernameTMP.text, 4,5f);
+    }
+
+    public async void SignInWithDiscordPlayer()
+    {
+        var success = await DBManager.Instance.SignInWithDiscord();
     }
 
 }

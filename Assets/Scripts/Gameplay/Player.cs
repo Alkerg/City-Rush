@@ -12,7 +12,8 @@ public class Player : MonoBehaviour
     public float jumpBufferCounter;
     public TouchControl touchControl;
     public CoinsManager coinsManager;
-    
+    public GameObject getCoinsTrigger;
+
     private float jumpBufferTime = 0.3f;
     private AudioSource audioSource;
     private Rigidbody rb;
@@ -85,7 +86,7 @@ public class Player : MonoBehaviour
         transform.position = targetPosition;
 
     }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "coin")

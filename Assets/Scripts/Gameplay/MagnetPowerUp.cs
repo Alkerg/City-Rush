@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class MagnetPowerUp : MonoBehaviour
 {
-    private AudioSource audioSource;
+    public PowerUpManager powerUpManager;
     private MeshRenderer meshRenderer;
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        meshRenderer = GetComponent<MeshRenderer>();
+        powerUpManager = FindAnyObjectByType<PowerUpManager>().GetComponent<PowerUpManager>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
         meshRenderer.enabled = true;
     }
     private void Update()
+
     {
         if (!LevelManager.isGameRunning) return;
         transform.position += new Vector3(0, 0, -LevelManager.levelSpeed * Time.deltaTime);
@@ -22,12 +23,10 @@ public class Coin : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("magnetTrigger"))
+        if (other.gameObject.tag == "Player")
         {
-            audioSource.Play();
+            powerUpManager.ActiveMagnetPowerUp();
             meshRenderer.enabled = false;
         }
-
-
     }
 }

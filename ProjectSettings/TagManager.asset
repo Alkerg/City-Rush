@@ -6,6 +6,9 @@ TagManager:
   tags:
   - block
   - coin
+  - magnetTrigger
+  - shieldTrigger
+  - obstacle
   layers:
   - Default
   - TransparentFX
